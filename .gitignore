@@ -1,0 +1,8 @@
+.DS_Store
+Thumbs.db
+.idea/
+.vagrant
+www/simple-crud/composer.lock
+www/simple-crud/vendor
+www/simple-crud/.env.*.php
+www/simple-crud/.env.php
