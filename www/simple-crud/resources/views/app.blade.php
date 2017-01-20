@@ -4,13 +4,13 @@
 
     <h1 class="title">Posts (via VUEJS)</h1>
 
-    <notification></notification>
+
 
     <div class="columns">
 
         <div class="column is-6">
 
-            <button class="button is-primary" @click="getAllPosts">Refresh</button>
+            <h2 class="title">All Posts</h2>
 
             <table class="table">
                 <thead>
@@ -29,20 +29,23 @@
                 </tbody>
             </table>
 
+            <button class="button is-primary" @click="getAllPosts">Refresh</button>
+
 
         </div>
 
         <div class="column is-6">
 
-            <div class="notification is-warning">
-                <button class="delete"></button>
+            <h2 class="title">Create a new post</h2>
+
+            <div class="notification is-warning" v-if="form.errors.any()">
+                <button class="delete" @click="form.errors.clear()"></button>
                 <ul>
                     <li v-for="error in form.errors.getAll()">@{{ error[0] }}</li>
                 </ul>
             </div>
 
-            <form method="POST" action="/posts" @submit.prevent='onSubmit' @keydown='
-            form.errors.clear($event.target.name)'>
+            <form method="POST" action="/posts" @submit.prevent='onSubmit' @keydown='form.errors.clear($event.target.name)'>
 
             <div class="control">
                 <label for="slug" class="label">Slug</label>
