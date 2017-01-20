@@ -15,6 +15,7 @@
 # ---------------------------------------------------------------------------------------------------------------------
 # Variables & Functions
 # ---------------------------------------------------------------------------------------------------------------------
+MYSQL_PASSWORD='password'
 APP_DATABASE_NAME='simple_crud'
 
 echoTitle () {
@@ -70,23 +71,37 @@ sudo service apache2 restart
 # echoTitle 'MYSQL-Database'
 # ---------------------------------------------------------------------------------------------------------------------
 # Setting MySQL (username: root) ~ (password: password)
-sudo debconf-set-selections <<< 'mysql-server-5.6 mysql-server/root_password password password'
-sudo debconf-set-selections <<< 'mysql-server-5.6 mysql-server/root_password_again password password'
+sudo debconf-set-selections <<< "mysql-server-5.6 mysql-server/root_password password $MYSQL_PASSWORD"
+sudo debconf-set-selections <<< "mysql-server-5.6 mysql-server/root_password_again password $MYSQL_PASSWORD"
 
 # Installing packages
 apt-get install -y mysql-server-5.6 mysql-client-5.6 mysql-common-5.6
 
-# Setup database
-mysql -uroot -ppassword -e "CREATE DATABASE IF NOT EXISTS $APP_DATABASE_NAME;";
-mysql -uroot -ppassword -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'password';"
-mysql -uroot -ppassword -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY 'password';"
+mysql -u root -p$MYSQL_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $APP_DATABASE_NAME;";
+mysql -u root -p$MYSQL_PASSWORD -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
+mysql -u root -p$MYSQL_PASSWORD -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '$MYSQL_PASSWORD';"
 
 sudo service mysql restart
+
+# Setup database
+# if [[ ! -z "`mysql -u root -p"${MYSQL_PASSWORD}" -se "SHOW DATABASES LIKE '$APP_DATABASE_NAME'" 2>&1`" ]];
+# then
+#     echo "Database already exists"
+#
+# else
+#     echo "Creating a new database.."
+#     mysql -u rootE -p$MYSQL_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $APP_DATABASE_NAME;";
+#     mysql -u rootE -p$MYSQL_PASSWORD -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
+#     mysql -u rootE -p$MYSQL_PASSWORD -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '$MYSQL_PASSWORD';"
+# fi
+
+
+
 
 # Import SQL file
 # mysql -uroot -ppassword database < my_database.sql
 
-# mysql -u root -ppassword
+# mysql -u root -psecrect
 # SHOW DATABASES;
 # CREATE DATABASE my_database_name;
 # DROP DATABASE my_database_name;
@@ -159,7 +174,6 @@ apt-get install -y libapache2-mod-php7.1
 
 # Trigger changes in apache
 a2enconf php7.1-fpm
-sudo service apache2 reload
 sudo service apache2 restart
 
 # Packages Available:
@@ -201,7 +215,7 @@ mv composer.phar /usr/local/bin/composer
 # Output success message
 echoTitle "Your machine has been provisioned"
 echo "-------------------------------------------"
-echo "MySQL is available on port 3306 with username 'root' and password 'password'"
+echo "MySQL is available on port 3306 with username 'root' and password '$MYSQL_PASSWORD'"
 echo "(you have to use 127.0.0.1 as opposed to 'localhost')"
 echo "Apache is available on port 80"
 echo -e "Head over to http://192.168.100.199 to get started"

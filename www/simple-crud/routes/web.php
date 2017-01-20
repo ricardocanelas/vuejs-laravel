@@ -15,9 +15,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('posts/vuejs', function () {
-    return view('posts.vuejs');
-})->name('vuejs');
+
+Route::get('vuejs', 'VuejsController@index')->name('vuejs.index');
+
+Route::get('posts/vuejs/get/all', 'VuejsPostController@all')->name('vuejs.all');
+Route::post('posts/vuejs', 'VuejsPostController@store')->name('vuejs.store');
+
 
 Route::resource('posts', 'PostController');
 
