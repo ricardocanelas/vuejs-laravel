@@ -18,8 +18,8 @@ class Post extends Model
      * @var array
      */
     protected $fillable = [
-        'slug',
         'title',
+        'excerpt',
         'body'
     ];
 }

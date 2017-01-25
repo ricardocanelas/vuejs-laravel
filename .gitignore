@@ -3,8 +3,7 @@ Thumbs.db
 .idea/
 .vagrant
 npm-debug.log
+www/normal-crud
 www/simple-crud/composer.lock
 www/simple-crud/vendor
 www/simple-crud/node_modules
-www/simple-crud/.env.*.php
-www/simple-crud/.env.php

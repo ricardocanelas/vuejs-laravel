@@ -3,6 +3,10 @@ import Errors from './Errors.js';
 export default class Form {
 
     constructor(data) {
+        this.setData(data)
+    }
+
+    setData(data) {
         this.originalData = data;
 
         for (let field in data) {
@@ -49,6 +53,10 @@ export default class Form {
         return this.submit('delete', url);
     }
 
+    get(url) {
+        return this.submit('get', url);
+    }
+
     submit(requestType, url) {
         return new Promise((resolve, reject) => {
             axios[requestType](url, this.data())
@@ -66,8 +74,6 @@ export default class Form {
     }
 
     onSuccess(data) {
-        console.log(data.message); // temporary
-
         this.reset();
     }
 

@@ -1,3 +1,14 @@
-# VUEJS 2 + LARAVEL 5.3
+# VUEJS 2 + LARAVEL 5.4
 
-Sorry, I haven't finished the first example (simple-crud) yet.
+[working..]
+
+Step by step:
+- cd www/simples-crud/
+- composer install 
+- vagrant ssh
+- cd /var/www/simple-crud
+- sudo php artisan migrate
+- sudo php artisan key:generate
+
+
+

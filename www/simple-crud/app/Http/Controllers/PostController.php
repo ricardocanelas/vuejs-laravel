@@ -8,13 +8,6 @@ use App\Post;
 class PostController extends Controller
 {
 
-    public function __construct()
-    {
-        $this->site_title = 'Posts';
-        $this->page_title = 'Posts';
-    }
-
-
     /**
      * Display a listing of the resource.
      *
@@ -22,13 +15,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
-        $data = [];
-        $data['site_title'] = $this->site_title;
-        $data['page_title'] = 'Products List';
-        $data['posts'] = Post::all();
-
-        return view('posts.index', $data);
+        return Post::all();
     }
 
     /**
@@ -38,7 +25,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        // return view('posts.create');
     }
 
     /**
@@ -50,12 +37,15 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'slug' => 'required|unique:posts|max:255',
+            //'slug' => 'required|unique:posts|max:255',
             'title' => 'required|max:255',
+            'excerpt' => 'required|max:510',
             'body' => 'required',
         ]);
-        Post::create($request->all())->save();
-        return redirect('posts')->withSuccess('Post has been saved!');
+
+        Post::forceCreate($request->all())->save();
+
+        return ['message' => 'Post created!'];
     }
 
     /**
@@ -66,8 +56,8 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post = Post::find($id);
-        return view('posts.show', compact('post'));
+        // $post = Post::find($id);
+        // return view('posts.show', compact('post'));
     }
 
     /**
@@ -78,8 +68,8 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        $post = Post::find($id);
-        return view('posts.edit', compact('post'));
+        return Post::find($id);
+        // return view('posts.edit', compact('post'));
     }
 
     /**
@@ -91,13 +81,14 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->only(['title', 'body']);
         $this->validate($request, [
-            'slug' => 'required|unique:posts|max:255',
             'title' => 'required|max:255',
             'body' => 'required',
         ]);
         Post::find($id)->update($request->all());
-        return redirect('posts')->withSuccess('Post has been updated!');
+
+        return ['message' => 'Post has been updated!'];
     }
 
     /**
@@ -109,6 +100,6 @@ class PostController extends Controller
     public function destroy($id)
     {
         Post::destroy($id);
-        return redirect('posts');
+        return ['message' => 'Post has been removed!'];
     }
 }
